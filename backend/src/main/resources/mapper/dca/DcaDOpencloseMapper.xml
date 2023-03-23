@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.dca.dao.DcaDOpencloseMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.dca.entity.DcaDOpenclose">
+                    <id column="id" property="id"/>
+                    <result column="dca_year" property="dcaYear"/>
+                    <result column="gwdj" property="gwdj"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dca_year, gwdj, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateDcaDOpenclose" parameterType="cc.mrbird.febs.dca.entity.DcaDOpenclose">
+        update dca_d_openclose
+        <trim prefix="set" suffixOverrides=",">
+<if test="dcaYear != null">dca_year=#{dcaYear},</if>
+<if test="gwdj != null">gwdj=#{gwdj},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findDcaDOpenclose" resultType="cc.mrbird.febs.dca.entity.DcaDOpenclose" parameterType="cc.mrbird.febs.dca.entity.DcaDOpenclose">
+        select  *  from dca_d_openclose
+        where  1=1
+            <if test="dcaDOpenclose.dcaYear != null and dcaDOpenclose.dcaYear != ''"> and dcaDOpenclose.dca_year like concat('%', #{ dcaDOpenclose.dcaYear} ,'%')</if>
+            <if test="dcaDOpenclose.gwdj != null and dcaDOpenclose.gwdj != ''"> and dcaDOpenclose.gwdj like concat('%', #{ dcaDOpenclose.gwdj} ,'%')</if>
+        <if test="dcaDOpenclose.state != null"> and dcaDOpenclose.state =#{ dcaDOpenclose.state} </if>
+        <if test="dcaDOpenclose.isDeletemark != null"> and dcaDOpenclose.IS_DELETEMARK =#{ dcaDOpenclose.isDeletemark} </if>
+        <if test="dcaDOpenclose.createTimeFrom!= null">
+            AND dcaDOpenclose.CREATE_TIME <![CDATA[ >= ]]>  #{dcaDOpenclose.createTimeFrom}
+        </if>
+        <if test="dcaDOpenclose.createTimeTo!= null">
+            AND dcaDOpenclose.CREATE_TIME <![CDATA[ <= ]]>  #{dcaDOpenclose.createTimeTo}
+        </if>
+        <if test="dcaDOpenclose.modifyTimeFrom!= null">
+            AND dcaDOpenclose.MODIFY_TIME <![CDATA[ >= ]]>  #{dcaDOpenclose.modifyTimeFrom}
+        </if>
+        <if test="dcaDOpenclose.modifyTimeTo!= null">
+            AND dcaDOpenclose.MODIFY_TIME <![CDATA[ <= ]]>  #{dcaDOpenclose.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>
