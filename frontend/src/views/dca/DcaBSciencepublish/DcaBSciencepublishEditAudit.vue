@@ -898,6 +898,7 @@ export default {
         that.$refs.fileagent3.setForm(dcaBSciencepublish.fileId);
       }, 500);
       setTimeout(() => {
+        that.$refs.seek.setAuthor(dcaBSciencepublish.userAccountName)
         that.$refs.seek.editSearch(dcaBSciencepublish.paperName);
       }, 500);
     },

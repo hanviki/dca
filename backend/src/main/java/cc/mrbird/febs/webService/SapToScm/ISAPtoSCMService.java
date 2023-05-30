@@ -19,4 +19,7 @@ public interface  ISAPtoSCMService {
     Boolean ChangeStausFromSap(List<String> codeList, String status);
 @WebMethod
     Boolean GetHrpMaterFromSap(List<HRP_MATER> materList, String Flag);
+
+    @WebMethod
+    List<NurseInfo> getFromSqlToSap();
 }

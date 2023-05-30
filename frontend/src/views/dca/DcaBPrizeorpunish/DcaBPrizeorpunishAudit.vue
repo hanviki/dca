@@ -6,330 +6,168 @@
           <a-form layout="horizontal">
             <a-row>
               <div>
-                <a-col
-                  :md="6"
-                  :sm="24"
-                >
-                  <a-form-item
-                    label="发薪号/姓名"
-                    v-bind="formItemLayout"
-                  >
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
                     <a-input v-model="queryParams.userAccount" />
                   </a-form-item>
                 </a-col>
-                <a-col
-                  :md="6"
-                  :sm="24"
-                >
-                  <a-form-item
-                    label="序号"
-                    v-bind="formItemLayout"
-                  >
-                    <a-input-number style="width:40%!important;" v-model="queryParams.auditXuhaoS"></a-input-number>至<a-input-number style="width:40%!important;" v-model="queryParams.auditXuhaoE" ></a-input-number>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="序号" v-bind="formItemLayout">
+                    <a-input-number style="width:40%!important;"
+                      v-model="queryParams.auditXuhaoS"></a-input-number>至<a-input-number style="width:40%!important;"
+                      v-model="queryParams.auditXuhaoE"></a-input-number>
                   </a-form-item>
                 </a-col>
-                  <a-col
-                  :md="6"
-                  :sm="24"
-                >
-                  <a-form-item
-                    label="初审状态"
-                    v-bind="formItemLayout"
-                  >
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="初审状态" v-bind="formItemLayout">
                     <a-select @change="handleChangeState">
-                      <a-select-option
-                        key="-1"
-                        value="-1"
-                      >全部</a-select-option>
-                      <a-select-option
-                        key="0"
-                        value="0"
-                      >审核一待审核</a-select-option>
-                      <a-select-option
-                        key="1"
-                        value="1"
-                      >审核二待审核</a-select-option>
-                      <a-select-option
-                        key="2"
-                        value="2"
-                      >审核三待审核</a-select-option>
-                      <a-select-option
-                        key="3"
-                        value="3"
-                      >审核四待审核</a-select-option>
+                      <a-select-option key="-1" value="-1">全部</a-select-option>
+                      <a-select-option key="0" value="0">审核一待审核</a-select-option>
+                      <a-select-option key="1" value="1">审核二待审核</a-select-option>
+                      <a-select-option key="2" value="2">审核三待审核</a-select-option>
+                      <a-select-option key="3" value="3">审核四待审核</a-select-option>
 
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col
-                  :md="6"
-                  :sm="24"
-                  
-                >
-                  <a-form-item
-                    label="申报年度"
-                    v-bind="formItemLayout"
-                    v-show="!dcaType==''"
-                  >
-                    <a-input v-model="queryParams.auditMan"  />
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="申报年度" v-bind="formItemLayout" v-show="!dcaType == ''">
+                    <a-input v-model="queryParams.auditMan" />
                   </a-form-item>
                 </a-col>
               </div>
               <span style="float: right; margin-top: 3px;">
-                 <a-button
-                  type="primary"
-                  @click="exportCustomExcel"
-                >导出</a-button>
-                <a-button
-                  type="primary"
-                  @click="search2"
-                >查询</a-button>
-                <a-button
-                  style="margin-left: 8px"
-                  @click="reset"
-                >重置</a-button>
+                <a-button type="primary" @click="exportCustomExcel">导出</a-button>
+                <a-button type="primary" @click="search2">查询</a-button>
+                <a-button style="margin-left: 8px" @click="reset">重置</a-button>
               </span>
             </a-row>
           </a-form>
         </div>
-        <a-tabs
-          type="card"
-          @change="callback"
-        >
-          <a-tab-pane
-            key="1"
-            tab="待审核"
-          >
-            <a-table
-              ref="TableInfo"
-              :columns="columns"
-              :data-source="dataSource"
-              :rowKey="record => record.id"
-              :pagination="pagination"
-              @change="handleTableChange"
-              :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-              :bordered="true"
-              :scroll="scroll"
-            >
-              <template
-                slot="ppStartTime"
-                slot-scope="text, record"
-              >
-                <div v-if="record.state==3">
-                  {{text==""|| text==null?"":text.substr(0,10)}}
+        <a-tabs type="card" @change="callback">
+          <a-tab-pane key="1" tab="待审核">
+            <a-table ref="TableInfo" :columns="columns" :data-source="dataSource" :rowKey="record => record.id"
+              :pagination="pagination" @change="handleTableChange"
+              :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :bordered="true"
+              :scroll="scroll">
+              <template slot="ppStartTime" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text == "" || text == null ? "" : text.substr(0, 10) }}
                 </div>
                 <div v-else>
-                  <a-date-picker
-                    :defaultValue="(text=='' || text==null)?'':moment(text, dateFormat)"
-                    @change="(e,f) => handleChange(e,f,record,'ppStartTime')"
-                  />
+                  <a-date-picker :defaultValue="(text == '' || text == null) ? '' : moment(text, dateFormat)"
+                    @change="(e, f) => handleChange(e, f, record, 'ppStartTime')" />
                 </div>
               </template>
-              <template
-                slot="ppEndTime"
-                slot-scope="text, record"
-              >
-                <div v-if="record.state==3">
-                  {{text==""|| text==null?"":text.substr(0,10)}}
+              <template slot="ppEndTime" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text == "" || text == null ? "" : text.substr(0, 10) }}
                 </div>
                 <div v-else>
-                  <a-date-picker
-                    :defaultValue="(text=='' || text==null)?'':moment(text, dateFormat)"
-                    @change="(e,f) => handleChange(e,f,record,'ppEndTime')"
-                  />
+                  <a-date-picker :defaultValue="(text == '' || text == null) ? '' : moment(text, dateFormat)"
+                    @change="(e, f) => handleChange(e, f, record, 'ppEndTime')" />
                 </div>
               </template>
-               <template
-        slot="ppCategory"
-        slot-scope="text, record"
-      >
-        <div v-if="record.state==3 ">
-          {{text}}
-        </div>
-        <div v-else>
-          <a-select
-            :value="record.ppCategory"
-            style="width: 100%"
-            @change="(e,f) => handleSelectChange(e,f,record,'ppCategory')"
-          >
-            <a-select-option value="奖励">
-              奖励
-            </a-select-option>
-            <a-select-option value="处分">
-              处分
-            </a-select-option>
-          </a-select>
-        </div>
-      </template>
-      <template
-        slot="ppPartment"
-        slot-scope="text, record"
-      >
-        <div v-if="record.state==3 ">
-          {{text}}
-        </div>
-        <div v-else>
-          <a-textarea
-            @blur="e => inputChange(e.target.value,record,'ppPartment')"
-            :value="record.ppPartment"
-          >
-          </a-textarea>
-        </div>
-      </template>
-       <template
-        slot="ppLb"
-        slot-scope="text, record"
-      >
-        <div v-if="record.state==3 ">
-          {{text}}
-        </div>
-        <div v-else>
-          <a-textarea
-            @blur="e => inputChange(e.target.value,record,'ppLb')"
-            :value="record.ppLb"
-          >
-          </a-textarea>
-        </div>
-      </template>
-              <template
-                slot="ppContent"
-                slot-scope="text, record"
-              >
-                <div v-if="record.state==3">
-                  {{text}}
+              <template slot="ppCategory" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text }}
                 </div>
                 <div v-else>
-                  <a-textarea
-                    @blur="e => inputChange(e.target.value,record,'ppContent')"
-                    :value="record.ppContent"
-                  >
+                  <a-select :value="record.ppCategory" style="width: 100%"
+                    @change="(e, f) => handleSelectChange(e, f, record, 'ppCategory')">
+                    <a-select-option value="奖励">
+                      奖励
+                    </a-select-option>
+                    <a-select-option value="处分">
+                      处分
+                    </a-select-option>
+                  </a-select>
+                </div>
+              </template>
+              <template slot="ppPartment" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text }}
+                </div>
+                <div v-else>
+                  <a-textarea @blur="e => inputChange(e.target.value, record, 'ppPartment')" :value="record.ppPartment">
                   </a-textarea>
                 </div>
               </template>
-              <template
-                slot="isUse"
-                slot-scope="text, record"
-              >
-                <a-checkbox
-                  @change="e => onIsUseChange(e,record,'isUse')"
-                  :checked="text"
-                ></a-checkbox>
-              </template>
-              <template
-                slot="auditSuggestion"
-                slot-scope="text, record"
-              >
-                <div v-if="record.state==3">
-                  {{text}}
+              <template slot="ppLb" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text }}
                 </div>
                 <div v-else>
-                  <a-textarea
-                    @blur="e => inputChange(e.target.value,record,'auditSuggestion')"
-                    :value="record.auditSuggestion"
-                  >
+                  <a-textarea @blur="e => inputChange(e.target.value, record, 'ppLb')" :value="record.ppLb">
                   </a-textarea>
                 </div>
               </template>
-              <template
-                slot="isBest"
-                slot-scope="text, record"
-              >
+              <template slot="ppContent" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text }}
+                </div>
+                <div v-else>
+                  <a-textarea @blur="e => inputChange(e.target.value, record, 'ppContent')" :value="record.ppContent">
+                  </a-textarea>
+                </div>
+              </template>
+              <template slot="isUse" slot-scope="text, record">
+                <a-checkbox @change="e => onIsUseChange(e, record, 'isUse')" :checked="text"></a-checkbox>
+              </template>
+              <template slot="auditSuggestion" slot-scope="text, record">
+                <div v-if="record.state == 3">
+                  {{ text }}
+                </div>
+                <div v-else>
+                  <a-textarea @blur="e => inputChange(e.target.value, record, 'auditSuggestion')"
+                    :value="record.auditSuggestion">
+                  </a-textarea>
+                </div>
+              </template>
+              <template slot="isBest" slot-scope="text, record">
                 <div key="jzContent">
 
-                  <a-switch
-                    checked-children="是"
-                    un-checked-children="否"
-                    @change="(e1,f) => inputCheckChange(e1,f,record,'isBest')"
-                    :checked="record.isBest=='是'"
-                  >
+                  <a-switch checked-children="是" un-checked-children="否"
+                    @change="(e1, f) => inputCheckChange(e1, f, record, 'isBest')" :checked="record.isBest == '是'">
                   </a-switch>
                 </div>
               </template>
-              <template
-                slot="userAccount"
-                slot-scope="text, record"
-              >
-                <a
-                  href="#"
-                  @click="showUserInfo(text)"
-                >{{text}}</a>
+              <template slot="userAccount" slot-scope="text, record">
+                <a href="#" @click="showUserInfo(text)">{{ text }}</a>
               </template>
-              <template
-                slot="action"
-                slot-scope="text, record"
-              >
-               <a-button
-                v-hasNoPermission="['dca:audit']"
-                  style="width:40%;padding-left:2px;padding-right:2px;"
-                  type="dashed"
-                  block
-                  @click="handleSave(record)"
-                >
+              <template slot="action" slot-scope="text, record">
+                <a-button v-hasNoPermission="['dca:audit']" style="width:40%;padding-left:2px;padding-right:2px;"
+                  type="dashed" block @click="handleSave(record)">
                   保存
                 </a-button>
-               <a-button
-                v-hasNoPermission="['dca:audit']"
-                  style="width:50%;padding-left:2px;padding-right:2px;"
-                  type="dashed"
-                  block
-                  @click="handleAuditNext(record)"
-                >
+                <a-button v-hasNoPermission="['dca:audit']" style="width:50%;padding-left:2px;padding-right:2px;"
+                  type="dashed" block @click="handleAuditNext(record)">
                   下一轮
-                </a-button> 
-                <a-button
-                v-hasNoPermission="['dca:audit']"
-                  style="width:40%;padding-left:2px;padding-right:2px;"
-                  type="dashed"
-                  block
-                  @click="handleAudit(record)"
-                >
+                </a-button>
+                <a-button v-hasNoPermission="['dca:audit']" style="width:40%;padding-left:2px;padding-right:2px;"
+                  type="dashed" block @click="handleAudit(record)">
                   通过
                 </a-button>
-                <a-button
-                v-hasNoPermission="['dca:audit']"
-                style="width:50%;padding-left:2px;"
-                  type="danger"
-                  block
-                  @click="handleAuditNo(record)"
-                >
+                <a-button v-hasNoPermission="['dca:audit']" style="width:50%;padding-left:2px;" type="danger" block
+                  @click="handleAuditNo(record)">
                   审核不通过
                 </a-button>
               </template>
             </a-table>
           </a-tab-pane>
-          <a-tab-pane
-            key="2"
-            tab="已审核"
-            :forceRender="true"
-          >
-            <dcaBPrizeorpunish-done
-              ref="TableInfo2"
-              :state="3"
-            >
+          <a-tab-pane key="2" tab="已审核" :forceRender="true">
+            <dcaBPrizeorpunish-done ref="TableInfo2" :state="3">
             </dcaBPrizeorpunish-done>
           </a-tab-pane>
-          <a-tab-pane
-            key="3"
-            tab="审核未通过"
-            :forceRender="true"
-          >
-            <dcaBPrizeorpunish-done
-              ref="TableInfo3"
-              :state="2"
-            >
+          <a-tab-pane key="3" tab="审核未通过" :forceRender="true">
+            <dcaBPrizeorpunish-done ref="TableInfo3" :state="2">
             </dcaBPrizeorpunish-done>
           </a-tab-pane>
         </a-tabs>
       </a-card>
     </a-spin>
-    <audit-userInfo
-      ref="userinfo"
-      @close="onCloseUserInfo"
-      :visibleUserInfo="visibleUserInfo"
-      :userAccount="userAccount"
-        :dcaYear="queryParams.auditMan"
-        :gwdj="queryParams.auditManName"
-    ></audit-userInfo>
+    <audit-userInfo ref="userinfo" @close="onCloseUserInfo" :visibleUserInfo="visibleUserInfo" :userAccount="userAccount"
+      :dcaYear="queryParams.auditMan" :gwdj="queryParams.auditManName"></audit-userInfo>
   </div>
 </template>
 
@@ -344,7 +182,7 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 }
 }
 export default {
-  data () {
+  data() {
     return {
       dateFormat: 'YYYY-MM-DD',
       advanced: false,
@@ -381,10 +219,10 @@ export default {
     }
   },
   components: { DcaBPrizeorpunishDone, AuditUserInfo },
-  mounted () {
+  mounted() {
     this.search()
   },
-    props: {
+  props: {
     dcaYear: {
       default: '' //年度
     },
@@ -394,16 +232,16 @@ export default {
   },
   methods: {
     moment,
-    callback (activeKey) {
+    callback(activeKey) {
       this.activeKey = activeKey
     },
-    search2 () {
-     if (this.paginationInfo) {
-       this.paginationInfo.current = this.pagination.defaultCurrent
-     }
-     this.search()
+    search2() {
+      if (this.paginationInfo) {
+        this.paginationInfo.current = this.pagination.defaultCurrent
+      }
+      this.search()
     },
-    search () {
+    search() {
       let { sortedInfo } = this
       let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
@@ -418,21 +256,21 @@ export default {
       })
       this.freshTabs()
     },
-    freshTabs () {
-        this.$refs.TableInfo2.queryParams = this.queryParams
-      
+    freshTabs() {
+      this.$refs.TableInfo2.queryParams = this.queryParams
+
       this.$refs.TableInfo3.queryParams = this.queryParams
-        if (this.$refs.TableInfo2.paginationInfo) {
-       this.$refs.TableInfo2.paginationInfo.current = 1
-     }
+      if (this.$refs.TableInfo2.paginationInfo) {
+        this.$refs.TableInfo2.paginationInfo.current = 1
+      }
       if (this.$refs.TableInfo3.paginationInfo) {
-       this.$refs.TableInfo3.paginationInfo.current = 1
-     }
-     
+        this.$refs.TableInfo3.paginationInfo.current = 1
+      }
+
       this.$refs.TableInfo2.fetch2(this.queryParams)
       this.$refs.TableInfo3.fetch2(this.queryParams)
     },
-    reset () {
+    reset() {
       // 取消选中
       this.selectedRowKeys = []
       // 重置分页
@@ -448,7 +286,7 @@ export default {
       this.queryParams = {}
       this.fetch()
     },
-    handleTableChange (pagination, filters, sorter) {
+    handleTableChange(pagination, filters, sorter) {
       this.sortedInfo = sorter
       this.paginationInfo = pagination
       this.fetch({
@@ -457,50 +295,50 @@ export default {
         ...this.queryParams
       })
     },
-    showUserInfo (text) {
+    showUserInfo(text) {
       //debugger
       this.visibleUserInfo = true
       this.userAccount = text
     },
 
 
-    onCloseUserInfo () {
+    onCloseUserInfo() {
       this.visibleUserInfo = false
     },
-     handleSelectChange (value, option, record, filedName) {
+    handleSelectChange(value, option, record, filedName) {
       console.info(value)
       record[filedName] = value
     },
-    onSelectChange (selectedRowKeys, selectedRows) {
+    onSelectChange(selectedRowKeys, selectedRows) {
       // console.log(selectedRows)
       if (selectedRows[0].state != 3) {
         this.selectedRowKeys = selectedRowKeys
       }
     },
-    handleChangeState (state) {
+    handleChangeState(state) {
       this.queryParams.auditState = state
     },
-    handleChange (date, dateStr, record, filedName) {
+    handleChange(date, dateStr, record, filedName) {
       const value = dateStr
       record[filedName] = value
     },
-    inputCheckChange (blFlag, f, record, filedName) {
+    inputCheckChange(blFlag, f, record, filedName) {
       record[filedName] = blFlag ? '是' : '否'
     },
-    inputChange (value, record, filedName) {
+    inputChange(value, record, filedName) {
       console.info(value)
       record[filedName] = value
     },
-    onIsUseChange (e, record, filedName) {
+    onIsUseChange(e, record, filedName) {
       record[filedName] = e.target.checked;
     },
-    handleAuditNext (record) {
+    handleAuditNext(record) {
       let that = this
       this.$confirm({
         title: '确定审核通过此记录?',
         content: '当您点击确定按钮后，此记录将进入下一个审核人',
         centered: true,
-        onOk () {
+        onOk() {
           let jsonStr = JSON.stringify(record)
           that.loading = true
           that.$post('dcaBPrizeorpunish/updateNew', {
@@ -516,17 +354,17 @@ export default {
             that.loading = false
           })
         },
-        onCancel () {
+        onCancel() {
         }
       })
     },
-    handleSave (record) {
+    handleSave(record) {
       let that = this
       this.$confirm({
         title: '确定保存此记录?',
         content: '当您点击确定按钮后，此记录将保存',
         centered: true,
-        onOk () {
+        onOk() {
           let jsonStr = JSON.stringify(record)
           that.loading = true
           that.$post('dcaBPrizeorpunish/updateNew', {
@@ -536,23 +374,23 @@ export default {
           }).then(() => {
             //this.reset()
             that.$message.success('保存成功')
-           // that.search()
+            // that.search()
             that.loading = false
           }).catch(() => {
             that.loading = false
           })
         },
-        onCancel () {
+        onCancel() {
         }
       })
     },
-    handleAudit (record) {
+    handleAudit(record) {
       let that = this
       this.$confirm({
         title: '确定审核通过此记录?',
         content: '当您点击确定按钮后，此记录将审核通过',
         centered: true,
-        onOk () {
+        onOk() {
           let jsonStr = JSON.stringify(record)
           that.loading = true
           that.$post('dcaBPrizeorpunish/updateNew', {
@@ -568,17 +406,17 @@ export default {
             that.loading = false
           })
         },
-        onCancel () {
+        onCancel() {
         }
       })
     },
-    handleAuditNo (record) {
+    handleAuditNo(record) {
       let that = this
       this.$confirm({
         title: '确定审核不通过此记录?',
         content: '当您点击确定按钮后，此记录将审核不通过',
         centered: true,
-        onOk () {
+        onOk() {
           let jsonStr = JSON.stringify(record)
           that.loading = true
           that.$post('dcaBPrizeorpunish/updateNew', {
@@ -594,11 +432,11 @@ export default {
             that.loading = false
           })
         },
-        onCancel () {
+        onCancel() {
         }
       })
     },
-     exportCustomExcel () {
+    exportCustomExcel() {
       let { sortedInfo } = this
       let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
@@ -607,23 +445,23 @@ export default {
         sortOrder = sortedInfo.order
       }
       let json = [...this.columns]
-      json.splice(this.columns.length-1,1) //移出第一个
+      json.splice(this.columns.length - 1, 1) //移出第一个
       console.info(json)
       let dataJson = JSON.stringify(json)
 
-      let queryParams= this.queryParams
-      
+      let queryParams = this.queryParams
+
       let state = 1
-      if(this.activeKey==1){
-         state = 1
+      if (this.activeKey == 1) {
+        state = 1
       }
-       if(this.activeKey==2){
-         state = 3
-         delete queryParams.auditState
+      if (this.activeKey == 2) {
+        state = 3
+        delete queryParams.auditState
       }
-       if(this.activeKey==3){
-         state = 2
-         delete queryParams.auditState
+      if (this.activeKey == 3) {
+        state = 2
+        delete queryParams.auditState
       }
       this.$export('dcaBPrizeorpunish/excel', {
         sortField: 'user_account',
@@ -633,7 +471,7 @@ export default {
         ...queryParams
       })
     },
-    fetch (params = {}) {
+    fetch(params = {}) {
       if (this.paginationInfo) {
         // 如果分页信息不为空，则设置表格当前第几页，每页条数，并设置查询分页参数
         this.$refs.TableInfo.pagination.current = this.paginationInfo.current
@@ -663,9 +501,9 @@ export default {
     }
   },
   computed: {
-    columns () {
+    columns() {
       return [
-          {
+        {
           title: '序号',
           dataIndex: 'auditXuhao',
           width: 60,
@@ -687,31 +525,31 @@ export default {
           width: 130,
           scopedSlots: { customRender: 'ppStartTime' }
         },
-       
+
         {
-        title: '奖励/处分',
-        dataIndex: 'ppCategory',
-        width: 100,
-        scopedSlots: { customRender: 'ppCategory' }
-      },
-      {
-        title: '奖励/处分名称',
-        dataIndex: 'ppContent',
-        width: 200,
-        scopedSlots: { customRender: 'ppContent' }
-      },
-       {
-        title: '授奖/处分部门',
-        dataIndex: 'ppPartment',
-        width: 150,
-        scopedSlots: { customRender: 'ppPartment' }
-      },
-      {
-        title: '类别',
-        dataIndex: 'ppLb',
-        width: 100,
-        scopedSlots: { customRender: 'ppLb' }
-      },
+          title: '奖励/处分',
+          dataIndex: 'ppCategory',
+          width: 100,
+          scopedSlots: { customRender: 'ppCategory' }
+        },
+        {
+          title: '奖励/处分名称',
+          dataIndex: 'ppContent',
+          width: 200,
+          scopedSlots: { customRender: 'ppContent' }
+        },
+        {
+          title: '授奖/处分部门',
+          dataIndex: 'ppPartment',
+          width: 150,
+          scopedSlots: { customRender: 'ppPartment' }
+        },
+        {
+          title: '类别',
+          dataIndex: 'ppLb',
+          width: 100,
+          scopedSlots: { customRender: 'ppLb' }
+        },
         {
           title: '状态',
           dataIndex: 'state',
@@ -731,7 +569,7 @@ export default {
             }
           }
         },
-         {
+        {
           title: '初审状态',
           dataIndex: 'auditState',
           width: 120,

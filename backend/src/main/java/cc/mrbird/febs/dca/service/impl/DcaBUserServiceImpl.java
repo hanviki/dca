@@ -575,7 +575,13 @@ public class DcaBUserServiceImpl extends ServiceImpl<DcaBUserMapper, DcaBUser> i
                 queryWrapper.in(DcaBUser::getKs, listKs);
             }
             if (StringUtils.isNotBlank(dcaBUser.getKs())) {
-                queryWrapper.apply("dca_b_user.user_account  in (select  user_account from dca_b_userapply where state=1 and  LOCATE(gwdj, '" + dcaBUser.getKs() + "')>0)");
+                if (StringUtils.isNotBlank(dcaBUser.getDcaYear())) {
+                    queryWrapper.apply("dca_b_user.user_account  in (select  user_account from dca_b_userapply where state=1 and  LOCATE(gwdj, '" + dcaBUser.getKs() + "')>0 and dca_year='"+dcaBUser.getDcaYear()+"' and np_position_name=dca_b_user.np_position_name)");
+                }
+                else{
+                    queryWrapper.apply("dca_b_user.user_account  in (select  user_account from dca_b_userapply where state=1 and  LOCATE(gwdj, '" + dcaBUser.getKs() + "')>0 and dca_year=dca_b_user.dca_year and np_position_name=dca_b_user.np_position_name)");
+                }
+                //queryWrapper.apply("dca_b_user.user_account  in (select  user_account from dca_b_userapply where state=1 and  LOCATE(gwdj, '" + dcaBUser.getKs() + "')>0)");
             }
 
             if (state == 3) {

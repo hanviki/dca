@@ -240,6 +240,7 @@ export default {
       token: "",
       sciName: '',
       isShow2: false, 
+      sciAuthor: this.$store.state.account.user.realname
     };
   },
   props: {
@@ -255,9 +256,7 @@ export default {
     jbLbList() {
       return this.jbLbList2;
     },
-    sciAuthor() {
-      return this.$store.state.account.user.realname;
-    },
+    
     auditShow() {
       return this.isAudit;
     }
@@ -286,6 +285,9 @@ export default {
     },
   },
   methods: {
+    setAuthor(userAccountName){
+        this.sciAuthor = userAccountName
+    },
     reset() {
       console.info("seek reset");
       

@@ -13,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.jws.WebService;
 import java.math.BigDecimal;
+import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -375,4 +374,37 @@ public class SAPtoSCMImpl implements ISAPtoSCMService {
         return false;
 
     }
+
+    @Override
+    public List<NurseInfo> getFromSqlToSap(){
+            String url = "jdbc:sqlserver://192.168.62.169:1433;databaseName=numas;user=numas_hrp;password=numas_hrp";
+            try (Connection connection = DriverManager.getConnection(url)) {
+                String sql = "SELECT * FROM V_NURSEUNIT";
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        List<NurseInfo> result = new ArrayList<>();
+                        while (resultSet.next()) {
+                            NurseInfo myObject = new NurseInfo();
+                            myObject.setName(resultSet.getString("name"));
+                            myObject.setCode(resultSet.getString("code"));
+                            myObject.setFxh(resultSet.getString("fxh"));
+                            myObject.setHisCode(resultSet.getString("his_code"));
+                            myObject.setUnitName(resultSet.getString("unitname"));
+                            myObject.setIdentityNo(resultSet.getString("identity_no"));
+                            myObject.setWorkTelNo(resultSet.getString("work_tel_no"));
+                            myObject.setRoleName(resultSet.getString("rolename"));
+                            // 其他属性同样需要从 resultSet 中获取并设置到 myObject 对象中
+                            result.add(myObject);
+                        }
+                        return result;
+                    }
+                }
+            } catch (SQLException e) {
+                log.error(e.getMessage());
+                e.printStackTrace();
+                return Collections.emptyList();
+            }
+        }
+
+
 }
